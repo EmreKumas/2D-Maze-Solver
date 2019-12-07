@@ -32,12 +32,46 @@ def read_maze():
     file.close()
 
 
+# noinspection PyUnusedLocal
 def set_size(x, y):
-    pass
+    global maze_size
+    # First setting the row count
+    if "rows" in x:
+        maze_size.append(int(re.sub("[^0-9]", "", x)))
+    elif "rows" in y:
+        maze_size.append(int(re.sub("[^0-9]", "", y)))
+
+    # Then setting the column count
+    if "columns" in x:
+        maze_size.append(int(re.sub("[^0-9]", "", x)))
+    elif "columns" in y:
+        maze_size.append(int(re.sub("[^0-9]", "", y)))
+
+    # Lastly we will fill wall arrays with zero.
+    global maze_walls_vertical
+    global maze_walls_horizontal
+    maze_walls_vertical = [[0 for i in range(maze_size[1] - 1)] for i in range(maze_size[0])]
+    maze_walls_horizontal = [[0 for i in range(maze_size[1])] for i in range(maze_size[0] - 1)]
 
 
 def set_walls(walls):
-    pass
+    global maze_walls_vertical
+    global maze_walls_horizontal
+    walls_length = len(walls)
+
+    for i in range(walls_length):
+        # First case is row...
+        if "row" in walls[i]:
+            row_index = int(re.sub("[^0-9]", "", walls[i]))
+            column_indexes = walls[i+1].split()
+            for index in column_indexes:
+                maze_walls_vertical[row_index - 1][int(index) - 1] = 1
+        # Second case is column...
+        elif "column" in walls[i]:
+            column_index = int(re.sub("[^0-9]", "", walls[i]))
+            row_indexes = walls[i + 1].split()
+            for index in row_indexes:
+                maze_walls_horizontal[int(index) - 1][column_index - 1] = 1
 
 
 # Global variables
