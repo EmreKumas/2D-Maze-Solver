@@ -74,6 +74,30 @@ def set_walls(walls):
                 maze_walls_horizontal[int(index) - 1][column_index - 1] = 1
 
 
+def can_pass(row, column, direction):
+    global maze_walls_vertical
+    global maze_walls_horizontal
+    global maze_size
+
+    # Check if the player can pass
+    if direction == "east":
+        if column == (maze_size[1] - 1):
+            return False
+        return not (maze_walls_vertical[row][column] == 1)
+    elif direction == "south":
+        if row == (maze_size[0] - 1):
+            return False
+        return not (maze_walls_horizontal[row][column] == 1)
+    elif direction == "west":
+        if column == 0:
+            return False
+        return not (maze_walls_vertical[row][column - 1] == 1)
+    elif direction == "north":
+        if row == 0:
+            return False
+        return not (maze_walls_horizontal[row - 1][column] == 1)
+
+
 # Global variables
 maze_size = []
 maze_walls_vertical = [[]]
@@ -82,3 +106,9 @@ maze_walls_horizontal = [[]]
 # Main function
 if __name__ == "__main__":
     read_maze()
+    # row = 4
+    # column = 2
+    # print("East", can_pass(row, column, "east"))
+    # print("South", can_pass(row, column, "south"))
+    # print("West", can_pass(row, column, "west"))
+    # print("North", can_pass(row, column, "north"))
