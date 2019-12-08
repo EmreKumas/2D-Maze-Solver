@@ -27,6 +27,15 @@ def read_maze():
                 line = file.readline().rstrip("\n\r")
             set_walls(walls)
 
+        if line == "Traps":
+            traps = []
+            line = file.readline().rstrip("\n\r")
+            # We are going to read every line until Start section...
+            while line != "Start" and line:
+                traps.append(line)
+                line = file.readline().rstrip("\n\r")
+            set_traps(traps)
+
         line = file.readline().rstrip("\n\r")
 
     file.close()
@@ -47,11 +56,13 @@ def set_size(x, y):
     elif "columns" in y:
         maze_size.append(int(re.sub("[^0-9]", "", y)))
 
-    # Lastly we will fill wall arrays with zero.
+    # Lastly we will fill wall and trap arrays with zero.
     global maze_walls_vertical
     global maze_walls_horizontal
+    global maze_traps
     maze_walls_vertical = [[0 for i in range(maze_size[1] - 1)] for i in range(maze_size[0])]
     maze_walls_horizontal = [[0 for i in range(maze_size[1])] for i in range(maze_size[0] - 1)]
+    maze_traps = [[0 for i in range(maze_size[1])] for i in range(maze_size[0])]
 
 
 def set_walls(walls):
@@ -72,6 +83,13 @@ def set_walls(walls):
             row_indexes = walls[i + 1].split()
             for index in row_indexes:
                 maze_walls_horizontal[int(index) - 1][column_index - 1] = 1
+
+
+def set_traps(traps):
+    global maze_traps
+    for trap in traps:
+        indexes = list(map(int, trap.split()))
+        maze_traps[indexes[0] - 1][indexes[1] - 1] = 1
 
 
 def can_pass(row, column, direction):
@@ -102,13 +120,8 @@ def can_pass(row, column, direction):
 maze_size = []
 maze_walls_vertical = [[]]
 maze_walls_horizontal = [[]]
+maze_traps = [[]]
 
 # Main function
 if __name__ == "__main__":
     read_maze()
-    # row = 4
-    # column = 2
-    # print("East", can_pass(row, column, "east"))
-    # print("South", can_pass(row, column, "south"))
-    # print("West", can_pass(row, column, "west"))
-    # print("North", can_pass(row, column, "north"))
