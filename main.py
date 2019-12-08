@@ -22,19 +22,21 @@ def read_maze():
             walls = []
             line = file.readline().rstrip("\n\r")
             # We are going to read every line until Traps section...
-            while line != "Traps" and line:
+            while line:
                 walls.append(line)
                 line = file.readline().rstrip("\n\r")
             set_walls(walls)
-
-        if line == "Traps":
+        elif line == "Traps":
             traps = []
             line = file.readline().rstrip("\n\r")
             # We are going to read every line until Start section...
-            while line != "Start" and line:
+            while line:
                 traps.append(line)
                 line = file.readline().rstrip("\n\r")
             set_traps(traps)
+        elif line == "Start":
+            start = file.readline().rstrip("\n\r")
+            set_start(start)
 
         line = file.readline().rstrip("\n\r")
 
@@ -92,6 +94,13 @@ def set_traps(traps):
         maze_traps[indexes[0] - 1][indexes[1] - 1] = 1
 
 
+def set_start(start):
+    global maze_start
+    indexes = list(map(int, start.split()))
+    maze_start.append(indexes[0] - 1)
+    maze_start.append(indexes[1] - 1)
+
+
 def can_pass(row, column, direction):
     global maze_walls_vertical
     global maze_walls_horizontal
@@ -121,6 +130,7 @@ maze_size = []
 maze_walls_vertical = [[]]
 maze_walls_horizontal = [[]]
 maze_traps = [[]]
+maze_start = []
 
 # Main function
 if __name__ == "__main__":
