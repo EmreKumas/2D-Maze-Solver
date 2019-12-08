@@ -37,6 +37,14 @@ def read_maze():
         elif line == "Start":
             start = file.readline().rstrip("\n\r")
             set_start(start)
+        elif line == "Goals":
+            goals = []
+            line = file.readline().rstrip("\n\r")
+            # We are going to read every line till end...
+            while line:
+                goals.append(line)
+                line = file.readline().rstrip("\n\r")
+            set_goals(goals)
 
         line = file.readline().rstrip("\n\r")
 
@@ -62,9 +70,11 @@ def set_size(x, y):
     global maze_walls_vertical
     global maze_walls_horizontal
     global maze_traps
+    global maze_goals
     maze_walls_vertical = [[0 for i in range(maze_size[1] - 1)] for i in range(maze_size[0])]
     maze_walls_horizontal = [[0 for i in range(maze_size[1])] for i in range(maze_size[0] - 1)]
     maze_traps = [[0 for i in range(maze_size[1])] for i in range(maze_size[0])]
+    maze_goals = [[0 for i in range(maze_size[1])] for i in range(maze_size[0])]
 
 
 def set_walls(walls):
@@ -101,6 +111,13 @@ def set_start(start):
     maze_start.append(indexes[1] - 1)
 
 
+def set_goals(goals):
+    global maze_goals
+    for goal in goals:
+        indexes = list(map(int, goal.split()))
+        maze_goals[indexes[0] - 1][indexes[1] - 1] = 1
+
+
 def can_pass(row, column, direction):
     global maze_walls_vertical
     global maze_walls_horizontal
@@ -131,6 +148,7 @@ maze_walls_vertical = [[]]
 maze_walls_horizontal = [[]]
 maze_traps = [[]]
 maze_start = []
+maze_goals = [[]]
 
 # Main function
 if __name__ == "__main__":
