@@ -5,31 +5,41 @@ def depth_first_search():
     # Firstly, lets add the root element to the frontier.
     frontier.append(graph.root)
 
+    # Variables
+    goal_state = None
+
     # DFS
     while len(frontier) > 0:
-        # First, we need to remove the first node from the frontier and add it to the visited...
-        current_node = frontier.pop(0)
+        # First, we need to remove the last node from the frontier and add it to the visited...
+        current_node = frontier.pop()
         visited.append(current_node)
 
         # Stop DFS, if we are in a goal state...
         if is_goal(current_node):
+            goal_state = current_node
             break
 
-        # Lets add all child nodes of the current element to the beginning of the list...
+        # Lets add all child nodes of the current element to the end of the list...
         add_to_frontier(current_node)
+
+    # Check if DFS was successful...
+    if goal_state is not None:
+        print("Goal state found.")
+    else:
+        print("No goal state found.")
 
 
 def add_to_frontier(current_node):
     # If the child nodes are not None AND if they are not in visited, we will add them to the frontier.
-    # But we will do this in reverse order because we add each node to the front of the list.
+    # But we'll do it in reverse order because we add each node to the end of the list and EAST should be the last node.
     if current_node.north is not None and not is_in_visited(current_node.north):
-        frontier.insert(0, current_node.north)
+        frontier.append(current_node.north)
     if current_node.west is not None and not is_in_visited(current_node.west):
-        frontier.insert(0, current_node.west)
+        frontier.append(current_node.west)
     if current_node.south is not None and not is_in_visited(current_node.south):
-        frontier.insert(0, current_node.south)
+        frontier.append(current_node.south)
     if current_node.east is not None and not is_in_visited(current_node.east):
-        frontier.insert(0, current_node.east)
+        frontier.append(current_node.east)
 
 
 def is_in_visited(node):
