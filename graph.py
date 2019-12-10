@@ -16,7 +16,7 @@ class Node:
         return x == self.x and y == self.y
 
     def __str__(self):
-        return "x = " + str(self.x) + "\ny = " + str(self.y) + "\n"
+        return "[" + str(self.x) + ", " + str(self.y) + "]"
 
 
 class Graph:
