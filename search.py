@@ -5,7 +5,19 @@ visited = []
 
 
 def depth_first_search():
-    # Firstly, lets add the root element to the frontier.
+    dfs_bfs()
+
+
+def breath_first_search():
+    dfs_bfs()
+
+
+def dfs_bfs():
+    # Firstly, empty frontier and visited.
+    frontier.clear()
+    visited.clear()
+
+    # Lets add the root element to the frontier.
     frontier.append(graph.root)
 
     # Variables
@@ -13,7 +25,7 @@ def depth_first_search():
     solution_cost = 0
     solution = []
 
-    # DFS
+    # DFS_BFS
     while len(frontier) > 0:
         # First, we need to remove the last node from the frontier and add it to the visited...
         current_node = frontier.pop()
@@ -77,7 +89,7 @@ def is_goal(node):
 
 
 def print_results(algorithm, solution_cost, solution):
-    print(algorithm, "\n")
+    print(algorithm)
     print("Cost of the solution:", solution_cost)
     print("The solution path (" + str(len(solution)) + " nodes):", end=" ")
     for node in solution:
@@ -85,4 +97,4 @@ def print_results(algorithm, solution_cost, solution):
     print("\nExpanded nodes (" + str(len(visited)) + " nodes):", end=" ")
     for node in visited:
         print(node, end=" ")
-    print()
+    print("\n")

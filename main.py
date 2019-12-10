@@ -8,3 +8,4 @@ if __name__ == "__main__":
     search.graph = graph
 
     search.depth_first_search()
+    search.breath_first_search()
