@@ -1,18 +1,21 @@
+from collections import OrderedDict
+
+
 # ############################################## GLOBAL VARIABLES
 graph = None
 frontier = []
-visited = []
+visited = OrderedDict()  # To prevent duplicates, we use OrderedDict
 
 
 def depth_first_search():
-    dfs_bfs()
+    dfs_bfs("Depth First Search(DFS):")
 
 
 def breath_first_search():
-    dfs_bfs()
+    dfs_bfs("Breath First Search(BFS):")
 
 
-def dfs_bfs():
+def dfs_bfs(algorithm):
     # Firstly, empty frontier and visited.
     frontier.clear()
     visited.clear()
@@ -21,25 +24,31 @@ def dfs_bfs():
     frontier.append(graph.root)
 
     # Variables
+    pop_index = 0
     goal_state = None
     solution_cost = 0
     solution = []
 
     # DFS_BFS
     while len(frontier) > 0:
-        # First, we need to remove the last node from the frontier and add it to the visited...
-        current_node = frontier.pop()
-        visited.append(current_node)
 
-        # Stop DFS, if we are in a goal state...
+        # If DFS, we will remove last node from the frontier. If BFS, we will remove the first node from the frontier.
+        if "DFS" in algorithm:
+            pop_index = len(frontier) - 1
+
+        # We need to remove the correct node from the frontier according to the algorithm and add it to the visited...
+        current_node = frontier.pop(pop_index)
+        visited[current_node] = None
+
+        # Stop DFS_BFS, if we are in a goal state...
         if is_goal(current_node):
             goal_state = current_node
             break
 
         # Lets add all child nodes of the current element to the end of the list...
-        add_to_frontier(current_node)
+        add_to_frontier(current_node, algorithm)
 
-    # Check if DFS was successful...
+    # Check if DFS_BFS was successful...
     if goal_state is None:
         print("No goal state found.")
         return
@@ -53,32 +62,40 @@ def dfs_bfs():
         current = current.parent
 
     # Print the results...
-    print_results("Depth First Search(DFS):", solution_cost, solution)
+    print_results(algorithm, solution_cost, solution)
 
 
-def add_to_frontier(current_node):
+def add_to_frontier(current_node, algorithm):
     # If the child nodes are not None AND if they are not in visited, we will add them to the frontier.
-    # But we'll do it in reverse order because we add each node to the end of the list and EAST should be the last node.
-    if current_node.north is not None and not is_in_visited(current_node.north):
-        add_this(current_node, current_node.north)
-    if current_node.west is not None and not is_in_visited(current_node.west):
-        add_this(current_node, current_node.west)
-    if current_node.south is not None and not is_in_visited(current_node.south):
-        add_this(current_node, current_node.south)
+    nodes_to_add = []
     if current_node.east is not None and not is_in_visited(current_node.east):
-        add_this(current_node, current_node.east)
+        nodes_to_add.append(set_parent(current_node, current_node.east))
+    if current_node.south is not None and not is_in_visited(current_node.south):
+        nodes_to_add.append(set_parent(current_node, current_node.south))
+    if current_node.west is not None and not is_in_visited(current_node.west):
+        nodes_to_add.append(set_parent(current_node, current_node.west))
+    if current_node.north is not None and not is_in_visited(current_node.north):
+        nodes_to_add.append(set_parent(current_node, current_node.north))
+
+    # For DFS we'll do it in reverse order because we add each node to the end and EAST should be the last node.
+    # For BFS we'll do it in correct order.
+    if "DFS" in algorithm:
+        nodes_to_add.reverse()
+
+    # Then add each node to the frontier.
+    for node in nodes_to_add:
+        frontier.append(node)
 
 
-def add_this(parent_node, child_node):
+def set_parent(parent_node, child_node):
     # We need to set the parent node...
     child_node.parent = parent_node
-    frontier.append(child_node)
+    return child_node
 
 
 def is_in_visited(node):
-    for n in visited:
-        if node.check_equality(n.x, n.y):
-            return True
+    if node in visited:
+        return True
     return False
 
 
