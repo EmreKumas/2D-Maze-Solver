@@ -6,6 +6,7 @@ class Node:
         self.x = 0
         self.y = 0
         self.cost = 0
+        self.parent = None
         self.east = None
         self.south = None
         self.west = None
@@ -27,6 +28,9 @@ class Graph:
         # Creating the graph.
         self.maze = Maze()
         self.root = self.create_node(self.maze.start[0], self.maze.start[1])
+
+        # We will make the cost of root node 0, because that's where we start.
+        self.root.cost = 0
 
     def create_node(self, x, y):
         node = Node()
