@@ -38,13 +38,15 @@ def depth_first_search():
         current = current.parent
 
     # Print the results...
+    print("Depth First Search(DFS):\n")
     print("Cost of the solution:", solution_cost)
-    print("The solution path:", end=" ")
+    print("The solution path (" + str(len(solution)) + " nodes):", end=" ")
     for node in solution:
         print(node, end=" ")
-    print("\nExpanded nodes:", end=" ")
+    print("\nExpanded nodes (" + str(len(visited)) + " nodes):", end=" ")
     for node in visited:
         print(node, end=" ")
+    print()
 
 
 def add_to_frontier(current_node):
