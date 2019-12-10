@@ -7,6 +7,8 @@ def depth_first_search():
 
     # Variables
     goal_state = None
+    solution_cost = 0
+    solution = []
 
     # DFS
     while len(frontier) > 0:
@@ -23,10 +25,26 @@ def depth_first_search():
         add_to_frontier(current_node)
 
     # Check if DFS was successful...
-    if goal_state is not None:
-        print("Goal state found.")
-    else:
+    if goal_state is None:
         print("No goal state found.")
+        return
+
+    # We need to calculate the cost of the solution AND get the solution itself...
+    current = goal_state
+    while current is not None:
+        solution_cost += current.cost
+        solution.insert(0, current)
+        # Get the parent node and continue...
+        current = current.parent
+
+    # Print the results...
+    print("Cost of the solution:", solution_cost)
+    print("The solution path:", end=" ")
+    for node in solution:
+        print(node, end=" ")
+    print("\nExpanded nodes:", end=" ")
+    for node in visited:
+        print(node, end=" ")
 
 
 def add_to_frontier(current_node):
