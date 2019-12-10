@@ -33,13 +33,19 @@ def add_to_frontier(current_node):
     # If the child nodes are not None AND if they are not in visited, we will add them to the frontier.
     # But we'll do it in reverse order because we add each node to the end of the list and EAST should be the last node.
     if current_node.north is not None and not is_in_visited(current_node.north):
-        frontier.append(current_node.north)
+        add_this(current_node, current_node.north)
     if current_node.west is not None and not is_in_visited(current_node.west):
-        frontier.append(current_node.west)
+        add_this(current_node, current_node.west)
     if current_node.south is not None and not is_in_visited(current_node.south):
-        frontier.append(current_node.south)
+        add_this(current_node, current_node.south)
     if current_node.east is not None and not is_in_visited(current_node.east):
-        frontier.append(current_node.east)
+        add_this(current_node, current_node.east)
+
+
+def add_this(parent_node, child_node):
+    # We need to set the parent node...
+    child_node.parent = parent_node
+    frontier.append(child_node)
 
 
 def is_in_visited(node):
