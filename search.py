@@ -41,15 +41,7 @@ def depth_first_search():
         current = current.parent
 
     # Print the results...
-    print("Depth First Search(DFS):\n")
-    print("Cost of the solution:", solution_cost)
-    print("The solution path (" + str(len(solution)) + " nodes):", end=" ")
-    for node in solution:
-        print(node, end=" ")
-    print("\nExpanded nodes (" + str(len(visited)) + " nodes):", end=" ")
-    for node in visited:
-        print(node, end=" ")
-    print()
+    print_results("Depth First Search(DFS):", solution_cost, solution)
 
 
 def add_to_frontier(current_node):
@@ -82,3 +74,15 @@ def is_goal(node):
     if graph.maze.goals[node.x][node.y] == 1:
         return True
     return False
+
+
+def print_results(algorithm, solution_cost, solution):
+    print(algorithm, "\n")
+    print("Cost of the solution:", solution_cost)
+    print("The solution path (" + str(len(solution)) + " nodes):", end=" ")
+    for node in solution:
+        print(node, end=" ")
+    print("\nExpanded nodes (" + str(len(visited)) + " nodes):", end=" ")
+    for node in visited:
+        print(node, end=" ")
+    print()
