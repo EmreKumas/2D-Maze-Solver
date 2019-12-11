@@ -23,6 +23,52 @@ def uniform_cost_search():
     dfs_bfs_ids_ucs("Uniform Cost Search(UCS):")
 
 
+def greedy_best_first_search():
+
+    # Variables
+    goal_state = None
+    solution_cost = 0
+    solution = []
+
+    # Lets clear frontier and visited, then add root element to the frontier.
+    frontier.clear()
+    visited.clear()
+    frontier.append(graph.root)
+
+    while len(frontier) > 0:
+
+        # Firstly, we need to sort the frontier according to heuristic...
+        sort_frontier(return_heuristic)
+
+        # We need to remove the correct node from the frontier and add it to the visited.
+        current_node = frontier.pop(0)
+        visited[current_node] = None
+
+        # Stop GBFS, if we are in a goal state...
+        if is_goal(current_node):
+            goal_state = current_node
+            break
+
+        # Add to frontier as in BFS.
+        add_to_frontier(current_node, "BFS")
+
+    # Check if GBFS was successful...
+    if goal_state is not None:
+
+        # We need to calculate the cost of the solution AND get the solution itself...
+        current = goal_state
+        while current is not None:
+            solution_cost += current.cost
+            solution.insert(0, current)
+            # Get the parent node and continue...
+            current = current.parent
+
+        # Print the results...
+        print_results("Greedy Best First Search(GBFS):", solution_cost, solution, visited)
+    else:
+        print("No goal state found.")
+
+
 def dfs_bfs_ids_ucs(algorithm):
 
     # Variables
@@ -53,9 +99,9 @@ def dfs_bfs_ids_ucs(algorithm):
             if "DFS" in algorithm or "IDS" in algorithm:
                 pop_index = len(frontier) - 1
 
-            # IF UCS, we need to sort the frontier...
+            # IF UCS, we need to sort the frontier according to cost...
             if "UCS" in algorithm:
-                sort_frontier()
+                sort_frontier(return_cost)
 
             # We need to remove the correct node from the frontier according to the algorithm and add it to the visited.
             current_node = frontier.pop(pop_index)
@@ -170,5 +216,9 @@ def return_cost(node):
     return node.cost
 
 
-def sort_frontier():
-    frontier.sort(key=return_cost)
+def return_heuristic(node):
+    return node.heuristic
+
+
+def sort_frontier(sort_by):
+    frontier.sort(key=sort_by)

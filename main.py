@@ -11,3 +11,4 @@ if __name__ == "__main__":
     search.breath_first_search()
     search.iterative_deepening_search()
     search.uniform_cost_search()
+    search.greedy_best_first_search()
