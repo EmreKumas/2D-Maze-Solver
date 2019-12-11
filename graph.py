@@ -111,6 +111,10 @@ class Graph:
                 return node.cost
         return 0
 
+    def clear_parents(self):
+        for node in self.nodes:
+            node.parent = None
+
     def create_heuristic(self):
         # Create a heuristic for each node...
         for node in self.nodes:
