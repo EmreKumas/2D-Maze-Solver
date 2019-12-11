@@ -12,3 +12,4 @@ if __name__ == "__main__":
     search.iterative_deepening_search()
     search.uniform_cost_search()
     search.greedy_best_first_search()
+    search.a_star_search()

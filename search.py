@@ -8,22 +8,36 @@ visited = OrderedDict()  # To prevent duplicates, we use OrderedDict
 
 
 def depth_first_search():
+    graph.clear_parents()
     dfs_bfs_ids_ucs("Depth First Search(DFS):")
 
 
 def breath_first_search():
+    graph.clear_parents()
     dfs_bfs_ids_ucs("Breath First Search(BFS):")
 
 
 def iterative_deepening_search():
+    graph.clear_parents()
     dfs_bfs_ids_ucs("Iterative Deepening Search(IDS):")
 
 
 def uniform_cost_search():
+    graph.clear_parents()
     dfs_bfs_ids_ucs("Uniform Cost Search(UCS):")
 
 
 def greedy_best_first_search():
+    graph.clear_parents()
+    heuristic_search("Greedy Best First Search(GBFS):", return_heuristic)
+
+
+def a_star_search():
+    graph.clear_parents()
+    heuristic_search("A Star Search(A*):", return_cost_and_heuristic)
+
+
+def heuristic_search(algorithm, sort_by):
 
     # Variables
     goal_state = None
@@ -38,7 +52,7 @@ def greedy_best_first_search():
     while len(frontier) > 0:
 
         # Firstly, we need to sort the frontier according to heuristic...
-        sort_frontier(return_heuristic)
+        sort_frontier(sort_by)
 
         # We need to remove the correct node from the frontier and add it to the visited.
         current_node = frontier.pop(0)
@@ -48,6 +62,8 @@ def greedy_best_first_search():
         if is_goal(current_node):
             goal_state = current_node
             break
+
+        # print(current_node, current_node.parent)
 
         # Add to frontier as in BFS.
         add_to_frontier(current_node, "BFS")
@@ -64,7 +80,7 @@ def greedy_best_first_search():
             current = current.parent
 
         # Print the results...
-        print_results("Greedy Best First Search(GBFS):", solution_cost, solution, visited)
+        print_results(algorithm, solution_cost, solution, visited)
     else:
         print("No goal state found.")
 
@@ -155,13 +171,13 @@ def add_to_frontier(current_node, algorithm):
     # If the child nodes are not None AND if they are not in visited, we will add them to the frontier.
     nodes_to_add = []
     if current_node.east is not None and not is_in_visited(current_node.east):
-        nodes_to_add.append(set_parent(current_node, current_node.east))
+        nodes_to_add.append(set_parent(current_node, current_node.east, algorithm))
     if current_node.south is not None and not is_in_visited(current_node.south):
-        nodes_to_add.append(set_parent(current_node, current_node.south))
+        nodes_to_add.append(set_parent(current_node, current_node.south, algorithm))
     if current_node.west is not None and not is_in_visited(current_node.west):
-        nodes_to_add.append(set_parent(current_node, current_node.west))
+        nodes_to_add.append(set_parent(current_node, current_node.west, algorithm))
     if current_node.north is not None and not is_in_visited(current_node.north):
-        nodes_to_add.append(set_parent(current_node, current_node.north))
+        nodes_to_add.append(set_parent(current_node, current_node.north, algorithm))
 
     # For DFS we'll do it in reverse order because we add each node to the end and EAST should be the last node.
     # For BFS we'll do it in correct order.
@@ -173,9 +189,10 @@ def add_to_frontier(current_node, algorithm):
         frontier.append(node)
 
 
-def set_parent(parent_node, child_node):
-    # We need to set the parent node...
-    child_node.parent = parent_node
+def set_parent(parent_node, child_node, algorithm):
+    # We need to set the parent node it is None and if DFS is used.
+    if "DFS" in algorithm or child_node.parent is None:
+        child_node.parent = parent_node
     return child_node
 
 
@@ -218,6 +235,10 @@ def return_cost(node):
 
 def return_heuristic(node):
     return node.heuristic
+
+
+def return_cost_and_heuristic(node):
+    return node.heuristic + node.cost
 
 
 def sort_frontier(sort_by):
