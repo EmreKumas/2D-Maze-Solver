@@ -1,3 +1,4 @@
+from copy import deepcopy
 from collections import OrderedDict
 
 
@@ -8,18 +9,22 @@ visited = OrderedDict()  # To prevent duplicates, we use OrderedDict
 
 
 def depth_first_search():
-    dfs_bfs_ids("Depth First Search(DFS):")
+    dfs_bfs_ids_ucs("Depth First Search(DFS):")
 
 
 def breath_first_search():
-    dfs_bfs_ids("Breath First Search(BFS):")
+    dfs_bfs_ids_ucs("Breath First Search(BFS):")
 
 
 def iterative_deepening_search():
-    dfs_bfs_ids("Iterative Deepening Search(IDS):")
+    dfs_bfs_ids_ucs("Iterative Deepening Search(IDS):")
 
 
-def dfs_bfs_ids(algorithm):
+def uniform_cost_search():
+    dfs_bfs_ids_ucs("Uniform Cost Search(UCS):")
+
+
+def dfs_bfs_ids_ucs(algorithm):
 
     # Variables
     pop_index = 0
@@ -48,6 +53,10 @@ def dfs_bfs_ids(algorithm):
             # IF BFS, we will remove the first node from the frontier.
             if "DFS" in algorithm or "IDS" in algorithm:
                 pop_index = len(frontier) - 1
+
+            # IF UCS, we need to sort the frontier...
+            if "UCS" in algorithm:
+                sort_frontier()
 
             # We need to remove the correct node from the frontier according to the algorithm and add it to the visited.
             current_node = frontier.pop(pop_index)
@@ -155,3 +164,11 @@ def print_results(algorithm, solution_cost, solution, expanded_nodes):
         for node in expanded_nodes:
             print(node, end=" ")
     print("\n")
+
+
+def return_cost(node):
+    return node.cost
+
+
+def sort_frontier():
+    frontier.sort(key=return_cost)
