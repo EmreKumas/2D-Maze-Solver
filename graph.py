@@ -29,6 +29,9 @@ class Graph:
         self.maze = Maze()
         self.root = self.create_node(self.maze.start[0], self.maze.start[1])
 
+        # Finding maximum depth.
+        self.maximum_depth = self.find_maximum_depth() - 1
+
         # We will make the cost of root node 0, because that's where we start.
         self.root.cost = 0
 
@@ -54,21 +57,25 @@ class Graph:
             node.east = self.node_exists(node.x, node.y + 1)
             if node.east is None:
                 node.east = self.create_node(node.x, node.y + 1)
+                node.east.parent = node
 
         if self.maze.can_pass(node.x, node.y, "south"):
             node.south = self.node_exists(node.x + 1, node.y)
             if node.south is None:
                 node.south = self.create_node(node.x + 1, node.y)
+                node.south.parent = node
 
         if self.maze.can_pass(node.x, node.y, "west"):
             node.west = self.node_exists(node.x, node.y - 1)
             if node.west is None:
                 node.west = self.create_node(node.x, node.y - 1)
+                node.west.parent = node
 
         if self.maze.can_pass(node.x, node.y, "north"):
             node.north = self.node_exists(node.x - 1, node.y)
             if node.north is None:
                 node.north = self.create_node(node.x - 1, node.y)
+                node.north.parent = node
 
         return node
 
@@ -77,3 +84,18 @@ class Graph:
             if node.check_equality(x, y):
                 return node
         return None
+
+    def find_maximum_depth(self):
+        maximum_depth = 0
+
+        for node in self.nodes:
+            current_node = node
+            local_depth = 0
+            while current_node is not None:
+                current_node = current_node.parent
+                local_depth += 1
+
+            # If local_depth is greater, we will set it as maximum_depth.
+            maximum_depth = max(maximum_depth, local_depth)
+
+        return maximum_depth
