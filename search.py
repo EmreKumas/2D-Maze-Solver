@@ -8,51 +8,79 @@ visited = OrderedDict()  # To prevent duplicates, we use OrderedDict
 
 
 def depth_first_search():
-    dfs_bfs("Depth First Search(DFS):")
+    dfs_bfs_ids("Depth First Search(DFS):")
 
 
 def breath_first_search():
-    dfs_bfs("Breath First Search(BFS):")
+    dfs_bfs_ids("Breath First Search(BFS):")
 
 
 def iterative_deepening_search():
-    ids()
+    dfs_bfs_ids("Iterative Deepening Search(IDS):")
 
 
-def dfs_bfs(algorithm):
-    # Firstly, empty frontier and visited.
-    frontier.clear()
-    visited.clear()
-
-    # Lets add the root element to the frontier.
-    frontier.append(graph.root)
+def dfs_bfs_ids(algorithm):
 
     # Variables
     pop_index = 0
     goal_state = None
     solution_cost = 0
     solution = []
+    expanded_nodes = []
+    iteration = -1
 
-    # DFS_BFS
-    while len(frontier) > 0:
+    # DFS_BFS_IDS
+    while goal_state is None and iteration <= graph.maximum_depth:
 
-        # If DFS, we will remove last node from the frontier. If BFS, we will remove the first node from the frontier.
-        if "DFS" in algorithm:
-            pop_index = len(frontier) - 1
+        # For each iteration, we will increase iteration by one and clear frontier and visited. Also append root node.
+        iteration += 1
+        frontier.clear()
+        visited.clear()
+        frontier.append(graph.root)
 
-        # We need to remove the correct node from the frontier according to the algorithm and add it to the visited...
-        current_node = frontier.pop(pop_index)
-        visited[current_node] = None
+        # If IDS, we will add iteration number...
+        if "IDS" in algorithm:
+            expanded_nodes.append("Iteration " + str(iteration) + ":")
 
-        # Stop DFS_BFS, if we are in a goal state...
-        if is_goal(current_node):
-            goal_state = current_node
+        while len(frontier) > 0:
+
+            # If DFS or IDS, we will remove last node from the frontier.
+            # IF BFS, we will remove the first node from the frontier.
+            if "DFS" in algorithm or "IDS" in algorithm:
+                pop_index = len(frontier) - 1
+
+            # We need to remove the correct node from the frontier according to the algorithm and add it to the visited.
+            current_node = frontier.pop(pop_index)
+            visited[current_node] = None
+
+            # Stop DFS_BFS_IDS, if we are in a goal state...
+            if is_goal(current_node):
+                goal_state = current_node
+                break
+
+            # Lets add all child nodes of the current element to the end of the list...
+            # If IDS, we need to add child nodes according to the iteration number.
+            if "IDS" in algorithm:
+                parent = current_node
+                for i in range(iteration):
+                    # If parent is not none, iterate to upper parent.
+                    parent = parent if parent is None else parent.parent
+
+                if parent is None:
+                    add_to_frontier(current_node, "DFS")
+            # Else, we add all child nodes.
+            else:
+                add_to_frontier(current_node, algorithm)
+
+        # Add all visited nodes to expanded nodes, before clearing it.
+        for node in visited:
+            expanded_nodes.append(node)
+
+        # We will continue only if this is an IDS search...
+        if "IDS" not in algorithm:
             break
 
-        # Lets add all child nodes of the current element to the end of the list...
-        add_to_frontier(current_node, algorithm)
-
-    # Check if DFS_BFS was successful...
+    # Check if DFS_BFS_IDS was successful...
     if goal_state is None:
         print("No goal state found.")
         return
@@ -66,52 +94,7 @@ def dfs_bfs(algorithm):
         current = current.parent
 
     # Print the results...
-    print_results(algorithm, solution_cost, solution)
-
-
-def ids():
-    # Firstly, empty frontier and visited.
-    frontier.clear()
-    visited.clear()
-
-    # Lets add the root element to the frontier.
-    frontier.append(graph.root)
-
-    # Variables
-    goal_state = None
-    solution_cost = 0
-    solution = []
-    iteration = 0
-
-    # IDS
-    while goal_state is None and iteration <= graph.maximum_depth:
-        while len(frontier) > 0:
-
-            # We need to remove the correct node from the frontier according to the algorithm and add it to the visited.
-            current_node = frontier.pop(len(frontier) - 1)
-            visited[current_node] = None
-
-            # Stop DFS_BFS, if we are in a goal state...
-            if is_goal(current_node):
-                goal_state = current_node
-                break
-
-            # Lets add all child nodes of the current element to the end of the list...
-            # If the iteration number is sufficient.
-            parent = current_node
-            for i in range(iteration):
-                parent = parent if parent is None else parent.parent  # If parent is not none, iterate to upper parent.
-
-            if parent is None:
-                add_to_frontier(current_node, "DFS")
-
-            print(current_node)
-
-        # After frontier gets empty, we will increase iteration by one and clear frontier and visited.
-        iteration += 1
-        frontier.clear()
-        visited.clear()
-        frontier.append(graph.root)
+    print_results(algorithm, solution_cost, solution, expanded_nodes)
 
 
 def add_to_frontier(current_node, algorithm):
@@ -154,13 +137,21 @@ def is_goal(node):
     return False
 
 
-def print_results(algorithm, solution_cost, solution):
+def print_results(algorithm, solution_cost, solution, expanded_nodes):
     print(algorithm)
     print("Cost of the solution:", solution_cost)
     print("The solution path (" + str(len(solution)) + " nodes):", end=" ")
     for node in solution:
         print(node, end=" ")
-    print("\nExpanded nodes (" + str(len(visited)) + " nodes):", end=" ")
-    for node in visited:
-        print(node, end=" ")
+    print("\nExpanded nodes (" + str(len(expanded_nodes)) + " nodes):", end=" ")
+    if "IDS" in algorithm:
+        print()
+        for i in range(len(expanded_nodes) - 1):
+            if type(expanded_nodes[i+1]) == str:
+                print(expanded_nodes[i])
+            else:
+                print(expanded_nodes[i], end=" ")
+    else:
+        for node in expanded_nodes:
+            print(node, end=" ")
     print("\n")
