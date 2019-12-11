@@ -9,7 +9,7 @@ class Maze:
     walls_horizontal = [[]]
     traps = [[]]
     start = []
-    goals = [[]]
+    goals = []
 
     def __init__(self):
         self.read_maze()
@@ -85,7 +85,6 @@ class Maze:
         self.wall_vertical = [[0 for i in range(self.size[1] - 1)] for i in range(self.size[0])]
         self.walls_horizontal = [[0 for i in range(self.size[1])] for i in range(self.size[0] - 1)]
         self.traps = [[0 for i in range(self.size[1])] for i in range(self.size[0])]
-        self.goals = [[0 for i in range(self.size[1])] for i in range(self.size[0])]
 
     def set_walls(self, walls):
         walls_length = len(walls)
@@ -118,7 +117,8 @@ class Maze:
     def set_goals(self, goals):
         for goal in goals:
             indexes = list(map(int, goal.split()))
-            self.goals[indexes[0] - 1][indexes[1] - 1] = 1
+            indexes = list(map(lambda x: x - 1, indexes))
+            self.goals.append(indexes)
 
     def can_pass(self, row, column, direction):
         # Check if the player can pass

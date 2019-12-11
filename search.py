@@ -1,4 +1,3 @@
-from copy import deepcopy
 from collections import OrderedDict
 
 
@@ -141,8 +140,9 @@ def is_in_visited(node):
 
 
 def is_goal(node):
-    if graph.maze.goals[node.x][node.y] == 1:
-        return True
+    for goal in graph.maze.goals:
+        if goal[0] == node.x and goal[1] == node.y:
+            return True
     return False
 
 
