@@ -15,6 +15,10 @@ def breath_first_search():
     dfs_bfs("Breath First Search(BFS):")
 
 
+def iterative_deepening_search():
+    ids()
+
+
 def dfs_bfs(algorithm):
     # Firstly, empty frontier and visited.
     frontier.clear()
@@ -63,6 +67,51 @@ def dfs_bfs(algorithm):
 
     # Print the results...
     print_results(algorithm, solution_cost, solution)
+
+
+def ids():
+    # Firstly, empty frontier and visited.
+    frontier.clear()
+    visited.clear()
+
+    # Lets add the root element to the frontier.
+    frontier.append(graph.root)
+
+    # Variables
+    goal_state = None
+    solution_cost = 0
+    solution = []
+    iteration = 0
+
+    # IDS
+    while goal_state is None and iteration <= graph.maximum_depth:
+        while len(frontier) > 0:
+
+            # We need to remove the correct node from the frontier according to the algorithm and add it to the visited.
+            current_node = frontier.pop(len(frontier) - 1)
+            visited[current_node] = None
+
+            # Stop DFS_BFS, if we are in a goal state...
+            if is_goal(current_node):
+                goal_state = current_node
+                break
+
+            # Lets add all child nodes of the current element to the end of the list...
+            # If the iteration number is sufficient.
+            parent = current_node
+            for i in range(iteration):
+                parent = parent if parent is None else parent.parent  # If parent is not none, iterate to upper parent.
+
+            if parent is None:
+                add_to_frontier(current_node, "DFS")
+
+            print(current_node)
+
+        # After frontier gets empty, we will increase iteration by one and clear frontier and visited.
+        iteration += 1
+        frontier.clear()
+        visited.clear()
+        frontier.append(graph.root)
 
 
 def add_to_frontier(current_node, algorithm):

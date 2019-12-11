@@ -9,3 +9,4 @@ if __name__ == "__main__":
 
     search.depth_first_search()
     search.breath_first_search()
+    search.iterative_deepening_search()
